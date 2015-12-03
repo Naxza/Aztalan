@@ -9,6 +9,7 @@ using System.Reflection;
 using Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Runtime.InteropServices;
 
 public class CreateExcelWorksheet
 {
@@ -29,7 +30,9 @@ public class CreateExcelWorksheet
         Console.Write("begining check process");//
         string chartName = "chart_";        
         Console.Write("Attempting to open file\n");//"please enter a name for the file:");
-        string fileName = "SalesByWeekly";//Console.ReadLine();
+        Console.WriteLine("Please enter file name: ");
+        //string file = Console.ReadLine();
+        string fileName = Console.ReadLine(); //user enters file name
         string worksheetName = "Shipment - ByCell per week";
         
 
@@ -39,33 +42,30 @@ public class CreateExcelWorksheet
             Console.WriteLine("EXCEL could not be started. Check that your office installation and project references are correct.");
             return;
         }
-        xlApp.Visible = true;
-        Workbook wb;
-        if (!File.Exists(loc + fileName + ".xlsm"))
+        
+        Workbook wb=null;//creates a wb reference
+        while (wb == null)
         {
-
-            if (Authorization.CompareTo("admin") == 0)
-            {
-                Console.Write("File doesn't exist.  creating new");
-                
-                wb = xlApp.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
-            }
-            wb = null;
-
-        }
-        else
-        {
-            Console.Write("File exists!  opening file");
-            if (Authorization.CompareTo("admin") != 0)
-            {
-                xlApp.DisplayAlerts = false;
+            if (!File.Exists(loc + fileName + ".xlsm"))
+            {            
+                Console.Write("File doesn't exist.  please try again\n");
+                Console.WriteLine("Please enter file name: ");
+                fileName = Console.ReadLine();
             }
             else
             {
+                Console.Write("File exists!  opening file");
+                if (Authorization.CompareTo("admin") != 0)
+                {
+                    xlApp.DisplayAlerts = false;
+                }
+                else
+                {
+                }
+                wb = xlApp.Workbooks.Open(loc + fileName + ".xlsm", Type.Missing, false);
             }
-            wb = xlApp.Workbooks.Open(loc + fileName + ".xlsm", Type.Missing, false);
-
         }
+        xlApp.Visible = true;
         Boolean found = false;
         Worksheet ws=null;
         //xlApp.DisplayAlerts = false;
@@ -94,16 +94,40 @@ public class CreateExcelWorksheet
             ws = wb.Sheets[worksheetName];
             chart(ws, "C1", "N2",chartName);
         }
-        ws = wb.Sheets[2];
-        xlApp.ActiveWindow.Zoom = 50;
-        xlApp.DisplayAlerts = true;
+        
+        ws = wb.Sheets[2];//sets ws to the second sheet as the wb.sheets[worksheetName] code was not working at the time
+        xlApp.ActiveWindow.Zoom = 50;//sets the zoom of the page out so you can see the chart as it generates
+        xlApp.DisplayAlerts = true;//allows excel to show any errors or alerts
         if (ws == null)
         {
             Console.WriteLine("\nWorksheet could not be created. Check that your office installation and project references are correct.");
         }
         chart(ws, "C1", "Z2", chartName);
-        //ws.Shapes.Item(mainChart).Top = 500;//<-cant interact with objects once excel is open causes errors :(
-        //begining manipulation/transfer attempt
+
+        bool deleted = false;
+
+        /*AFTER CREATING AND SAVING THE CHART THE CHART IS DELETED
+        *The reasoning behind this decision is so that if charts are generated constantly the file size will
+        *continue to grow and take up more space than needed, this way the chart is saved and stored as an immage.
+        *the immages can then be pulled to show a history of the past week.
+        */
+        try
+        {
+            ChartObject chartPageDelete = ws.ChartObjects("Chart 1");
+            chartPageDelete.Delete();
+            deleted = true;
+        }
+        catch
+        {
+            Console.WriteLine("\nChart with this name could not be found");
+            //throw new Exception("Chart with this name could not be found");
+        }
+        finally
+        {
+            Console.WriteLine("\nthe chart was " + (deleted ? "deleted" : "not deleted"));
+        }
+
+
         xlApp.DisplayAlerts = false;
         
 
@@ -116,22 +140,26 @@ public class CreateExcelWorksheet
         }
         else
         {
+            wb.Close();//closes the workbook
             
         }
+        Marshal.ReleaseComObject(xlApp);//releases all Com objects
+        xlApp.Quit();//closes this instance of excel
+
     }
 
+
+    //function to create charts, can be called for multiple charts
     static void chart(Worksheet thisWorkSheet,string x, string y, string name)
     {
-        ChartObjects newCharts = (ChartObjects)thisWorkSheet.ChartObjects(Type.Missing);
-        ChartObject myChart = (ChartObject)newCharts.Add(10, 80, 1350, 550);//(pos X, pos y, width, height)
+        ChartObjects newCharts = (ChartObjects)thisWorkSheet.ChartObjects(Type.Missing);//creates a chart object
+        ChartObject myChart = (ChartObject)newCharts.Add(10, 80, 1350, 550);//position of chart(pos X, pos y, width, height)
         Chart chartPage = myChart.Chart;
         Range chartRange = thisWorkSheet.get_Range(x,y);
         chartPage.Rotation = 0;
         chartPage.ChartType = XlChartType.xl3DColumnClustered;
         Axis xAxis = (Axis)chartPage.Axes(XlAxisType.xlCategory, XlAxisGroup.xlPrimary);
         xAxis.TickLabelPosition =XlTickLabelPosition.xlTickLabelPositionNone;
-        xAxis.HasTitle = true;
-        xAxis.AxisTitle.Text = " ";//NEEDS TO BE AXIS NOT AXIS TITLE SOMEHOW
         int startCol = 3;
         int startRow = 1;
         int maxRow = 2;
@@ -152,6 +180,7 @@ public class CreateExcelWorksheet
                     //Console.WriteLine("\n :loading value "+i+" part "+j);
                 }
             }
+            //simple check statement to add more colums.
             if (check)
             {
                 //Series newSeries;
@@ -169,20 +198,22 @@ public class CreateExcelWorksheet
         }
         //chartPage.SetSourceData(chartRange, Type.Missing);
         
-        chartPage.HasTitle = true;
+        chartPage.HasTitle = true;//makes the chart have a title
         chartPage.ChartTitle.Text = "Sales Data, Week of "+thisWorkSheet.get_Range("a2","a2").Value;//title of the chart
-        chartPage.ChartTitle.Font.Size = 45;
-        chartPage.ChartTitle.Font.Color = XlRgbColor.rgbGoldenrod;
-        chartPage.ChartStyle = 42;
+        chartPage.ChartTitle.Font.Size = 45;//sets the font size of the title
+        chartPage.ChartTitle.Font.Color = XlRgbColor.rgbGoldenrod;//color of title
+        chartPage.ChartStyle = 42;//style of chart
         DateTime week = DateTime.Today;
-        string holder = Format(week.ToString("d"));
+        string holder = Format(week.ToString("d"));//gets date to add to the immage that is being saved
         //EVERYTHING THAT HAS AN EFFECT ON THE CHART SHOULD HAPPEN BEFORE THIS!
-        //chartPage.Export(loc+name+(thisWorkSheet.get_Range("a2", "a2").Value).toString()+".jpg", "JPG", false);//takes the newly generated chart and saves it as a jpg
         chartPage.Export(loc + name +holder+ ".jpg", "JPG", false);//takes the newly generated chart and saves it as a jpg
-
         //THIS IS BASICALLY THE RETURN STATEMENT  /\  DO NOT DELETE!
+        //      (not really but it save the immage)
+        
     }
 
+
+    //formats date so that it can be added to a file name
     static string Format(string holder)
     {
         char[] characters = holder.ToCharArray();
@@ -195,13 +226,14 @@ public class CreateExcelWorksheet
         }
         return new string(characters);
     }
+
+    //saves changes to the file through a function so it may be called multiple times
     static void save(Application Excel, Workbook THING, string fileNomen)
     {
-        string path = @"C:\Users\Sam Kromm\Documents\Aztalalalalalan-Project-Software-Engineering-\CreateExcelWorksheet\CreateExcelWorksheet";
+        string path = loc;
         Excel.DisplayAlerts = false;
         THING.Application.DefaultFilePath = path;
         THING.SaveAs(fileNomen, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
         THING.Close();
     }
 }
-
