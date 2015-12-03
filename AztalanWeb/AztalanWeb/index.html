@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Your ASP.NET application</title>
+   <!-- <script>
+          public string Name {
+        get {return _name; }
+
+        set {
+            if(! Regex.isMatch(value, @"\w{1-35}"))
+                throw new ArgumentException("Name must be 1-35 characters");
+            _name = value;
+            alert(_name);
+        }
+    }
+    </script>-->
+    <style>
+    body {
+        background: #fff;
+        color: #505050;
+        font: 14px 'Segoe UI', tahoma, arial, helvetica, sans-serif;
+        margin: 20px;
+        padding: 0;
+    }
+
+    #header {
+        background: #efefef;
+        padding: 0;
+    }
+
+    h1 {
+        font-size: 48px;
+        font-weight: normal;
+        margin: 0;
+        padding: 0 30px;
+        line-height: 150px;
+    }
+
+    p {
+        font-size: 20px;
+        color: #fff;
+        background: #969696;
+        padding: 0 30px;
+        line-height: 50px;
+    }
+
+    #main {
+        padding: 5px 30px;
+    }
+
+    .section {
+        width: 21.7%;
+        float: left;
+        margin: 0 0 0 4%;
+    }
+
+        .section h2 {
+            font-size: 13px;
+            text-transform: uppercase;
+            margin: 0;
+            border-bottom: 1px solid silver;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+        }
+
+        .section.first {
+            margin-left: 0;
+        }
+
+            .section.first h2 {
+                font-size: 24px;
+                text-transform: none;
+                margin-bottom: 25px;
+                border: none;
+            }
+
+            .section.first li {
+                border-top: 1px solid silver;
+                padding: 8px 0;
+            }
+
+        .section.last {
+            margin-right: 0;
+        }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        line-height: 20px;
+    }
+
+    li {
+        padding: 4px 0;
+    }
+
+    a {
+        color: #267cb2;
+        text-decoration: none;
+    }
+
+    a:hover {
+            text-decoration: underline;
+    }
+    aside {
+        float: left;
+    }
+    #win-main {
+        float: left;
+    }
+    #link_menu > p > a {
+           padding-left: 2em;
+    }
+    </style>
+</head>
+<body>
+    <div id='title'>
+        <h3 align="center">Aztalan Engineering Inc.</h3>
+        <h4 align="center">Intranet</h4>
+    </div>
+    <div id="menu_bar">
+
+        <a href="index.html">Home</a>\t |
+        Out Of Office\t |
+        QMS\t |
+        <a href="news.html">Company News</a>\t |
+        <a href="charts.html">Organization Chart</a>
+        </div>
+        <div id="login">
+            <div>Username: <input type="text" id="username" /></div>
+            <div>Password: <input type="text" id="password" /></div>
+        </div> 
+        <section id="link_menu">
+           <p>
+            <a href="Views/Accounting.cshtml" target="win-main">Accounting</a>
+            <a href="Views/Engineering.cshtml" target="win-main">Engineering</a>
+            <a href="Views/HR.cshtml" target="win-main">Human Resources</a>
+            <a href="Views/InfoSystems.cshtml" target="win-main">Information Systems</a>
+            <a href="Viwes/Manufacturing.cshtml" target=win-main>Manufacturing</a>
+            <a href="Views/Sales.cshtml" target="win-main"></a>
+            <a href="Views/Quality.cshtml" target="win-main">Quality</a>
+            <a href="Views/Calendar.cshtml" target="win-main">Calendar</a>    
+           </p>
+        </section>   
+  <!--  <aside>
+        <p>
+            <a href="Views/Accounting.cshtml" target="win-main">Accounting</a><br />
+            <a href="Views/Engineering.cshtml" target="win-main">Engineering</a><br />
+            <a href="Views/HR.cshtml" target="win-main">Human Resources</a><br />
+            <a href="Views/InfoSystems.cshtml" target="win-main">Information Systems</a><br />
+            <a href="Viwes/Manufacturing.cshtml" target=win-main>Manufacturing</a><br />
+            <a href="Views/Sales.cshtml" target="win-main"></a><br />
+            <a href="Views/Quality.cshtml" target="win-main">Quality</a><br />
+            <a href="Views/Calendar.cshtml" target="win-main">Calendar</a><br />    
+        </p>
+    </aside>-->
+    <section id="win-main">
+        <p>kjdklfja;kldjf;aklsjdk;flj</p>
+    </section>
+
+  
+ <!--   <div id="header">
+        <h1>Your ASP.NET application</h1>
+        <p>Congratulations! You've created a project</p>
+    </div>
+
+    <div id="main">
+        <div class="section first">
+            <h2>This application consists of:</h2>
+            <ul>
+                <li>Sample pages showing basic nav between Home, About, and Contact</li>
+                <li>Theming using <a href="http://go.microsoft.com/fwlink/?LinkID=615519">Bootstrap</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615520">Authentication</a>, if selected, shows how to register and sign in</li>
+                <li>ASP.NET features managed using <a href="http://go.microsoft.com/fwlink/?LinkID=320756">NuGet</a></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Customize app</h2>
+            <ul>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615541">Get started with ASP.NET MVC</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615523">Change the site's theme</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615524">Add more libraries using NuGet</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615542">Configure authentication</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615526">Customize information about the website users</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615527">Get information from social providers</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615528">Add HTTP services using ASP.NET Web API</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615529">Secure your web API</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615530">Add real-time web with ASP.NET SignalR</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615531">Add components using Scaffolding</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615532">Test your app with Browser Link</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615533">Share your project</a></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Deploy</h2>
+            <ul>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615534">Ensure your app is ready for production</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615535">Microsoft Azure</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615536">Hosting providers</a></li>
+            </ul>
+        </div>
+
+        <div class="section last">
+            <h2>Get help</h2>
+            <ul>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615537">Get help</a></li>
+                <li><a href="http://go.microsoft.com/fwlink/?LinkID=615538">Get more templates</a></li>
+            </ul>
+        </div>
+    </div>-->
+
+</body>
+</html>
