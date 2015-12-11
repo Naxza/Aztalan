@@ -28,7 +28,7 @@ public class CreateExcelWorksheet
         */
 
         Console.Write("begining check process");//
-        string chartName = "chart_";        
+        string chartName = "chart";        
         Console.Write("Attempting to open file\n");//"please enter a name for the file:");
         Console.WriteLine("Please enter file name: ");
         //string file = Console.ReadLine();
@@ -92,7 +92,7 @@ public class CreateExcelWorksheet
         {
             // Reference it by name
             ws = wb.Sheets[worksheetName];
-            chart(ws, "C1", "N2",chartName);
+            chart(ws, "C1", "N2",chartName,"1");
         }
         
         ws = wb.Sheets[2];//sets ws to the second sheet as the wb.sheets[worksheetName] code was not working at the time
@@ -102,7 +102,7 @@ public class CreateExcelWorksheet
         {
             Console.WriteLine("\nWorksheet could not be created. Check that your office installation and project references are correct.");
         }
-        chart(ws, "C1", "Z2", chartName);
+        chart(ws, "C1", "Z2", chartName,"1");
 
         bool deleted = false;
 
@@ -150,7 +150,7 @@ public class CreateExcelWorksheet
 
 
     //function to create charts, can be called for multiple charts
-    static void chart(Worksheet thisWorkSheet,string x, string y, string name)
+    static void chart(Worksheet thisWorkSheet,string x, string y, string name,string holder)
     {
         ChartObjects newCharts = (ChartObjects)thisWorkSheet.ChartObjects(Type.Missing);//creates a chart object
         ChartObject myChart = (ChartObject)newCharts.Add(10, 80, 1350, 550);//position of chart(pos X, pos y, width, height)
@@ -203,8 +203,7 @@ public class CreateExcelWorksheet
         chartPage.ChartTitle.Font.Size = 45;//sets the font size of the title
         chartPage.ChartTitle.Font.Color = XlRgbColor.rgbGoldenrod;//color of title
         chartPage.ChartStyle = 42;//style of chart
-        DateTime week = DateTime.Today;
-        string holder = Format(week.ToString("d"));//gets date to add to the immage that is being saved
+        
         //EVERYTHING THAT HAS AN EFFECT ON THE CHART SHOULD HAPPEN BEFORE THIS!
         chartPage.Export(loc + name +holder+ ".jpg", "JPG", false);//takes the newly generated chart and saves it as a jpg
         //THIS IS BASICALLY THE RETURN STATEMENT  /\  DO NOT DELETE!
